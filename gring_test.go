@@ -43,6 +43,11 @@ func TestAddWithValue(t *testing.T) {
 	assert.Equal(t, []int{0, 1, 2}, r.Tour())
 }
 
+func TestSetValue(t *testing.T) {
+	r := NewFromTour([]int{2, 1, 0, 4, 3})
+	r.SetValue(1, "hello")
+}
+
 func TestInsertAfter(t *testing.T) {
 	r := NewFromTour([]int{2, 1, 0, 4, 3})
 	r.InsertAfter(0, 3)
@@ -69,4 +74,22 @@ func TestInsertBefore(t *testing.T) {
 	assert.Equal(t, []int{0, 3, 2, 4, 1}, r.Tour())
 	r.InsertBefore(0, 2)
 	assert.Equal(t, []int{0, 2, 4, 1, 3}, r.Tour())
+}
+
+func TestDetach(t *testing.T) {
+	r := NewFromTour([]int{2, 1, 0, 4, 3})
+	r.Detach(3)
+	assert.Equal(t, []int{0, 4, 2, 1}, r.Tour())
+	r.Detach(2)
+	assert.Equal(t, []int{0, 4, 1}, r.Tour())
+}
+
+func TestSwap(t *testing.T) {
+	r := NewFromTour([]int{2, 1, 0, 4, 3})
+	r.Swap(1, 3)
+	assert.Equal(t, []int{0, 4, 1, 2, 3}, r.Tour())
+	r.Swap(0, 4)
+	assert.Equal(t, []int{0, 1, 2, 3, 4}, r.Tour())
+	r.Swap(0, 4)
+	assert.Equal(t, []int{0, 4, 1, 2, 3}, r.Tour())
 }

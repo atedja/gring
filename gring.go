@@ -58,11 +58,6 @@ func NewFromTour(tour []int) *Ring {
 	return r
 }
 
-// Sets the value of a particular node.
-func (r *Ring) SetValue(n int, v interface{}) {
-	r.nodes[n].value = v
-}
-
 // Adds a new node to the "end" of the ring.
 // "End" of the ring is whichever node that comes before the 0th node.
 // If ring is empty, adds the first node.
@@ -97,12 +92,25 @@ func (r *Ring) AddWithValue(v interface{}) {
 	r.length++
 }
 
+// Sets the value of a particular node.
+func (r *Ring) SetValue(n int, v interface{}) {
+	r.nodes[n].value = v
+}
+
 // Detaches node n, and inserts it after the node p, such that the end result becomes p -> n
-// Returns error if ring is empty.
-func (r *Ring) InsertAfter(n, p int) {
+// Returns error if ring is empty, or any of the nodes are detached.
+func (r *Ring) InsertAfter(n, p int) error {
+	if len(r.nodes) == 0 {
+		return ErrEmptyRing
+	}
+
 	pnext := r.nodes[p].next
 	if pnext == n {
 		pnext = r.nodes[pnext].next
+	}
+
+	if r.anyIsNil(n, p, pnext) {
+		return ErrInvalidOperationOnDetachedNode
 	}
 
 	r.Detach(n)
@@ -113,14 +121,24 @@ func (r *Ring) InsertAfter(n, p int) {
 	r.nodes[pnext].prev = n
 
 	r.length++
+
+	return nil
 }
 
 // Detaches node n, and inserts it before the node p, such that the end result becomes n -> p
-// Returns error if ring is empty.
-func (r *Ring) InsertBefore(n, p int) {
+// Returns error if ring is empty or any of the nodes are detached.
+func (r *Ring) InsertBefore(n, p int) error {
+	if len(r.nodes) == 0 {
+		return ErrEmptyRing
+	}
+
 	pprev := r.nodes[p].prev
 	if pprev == n {
 		pprev = r.nodes[pprev].prev
+	}
+
+	if r.anyIsNil(n, p, pprev) {
+		return ErrInvalidOperationOnDetachedNode
 	}
 
 	r.Detach(n)
@@ -131,6 +149,8 @@ func (r *Ring) InsertBefore(n, p int) {
 	r.nodes[p].prev = n
 
 	r.length++
+
+	return nil
 }
 
 // Detaches a particular node from the ring, connecting its prev and next nodes together.
@@ -154,23 +174,25 @@ func (r *Ring) Detach(n int) {
 // Swaps two nodes in the ring.
 func (r *Ring) Swap(a, b int) error {
 	aprev := r.nodes[a].prev
-	anext := r.nodes[a].next
 	bprev := r.nodes[b].prev
-	bnext := r.nodes[b].next
 
-	if r.anyIsNil(aprev, anext, bprev, bnext) {
+	if r.anyIsNil(a, b, aprev, bprev) {
 		return ErrInvalidOperationOnDetachedNode
 	}
 
-	r.nodes[aprev].next = b
-	r.nodes[b].prev = aprev
-	r.nodes[anext].prev = b
-	r.nodes[b].next = anext
+	r.Detach(a)
+	r.Detach(b)
 
-	r.nodes[bprev].next = a
-	r.nodes[a].prev = bprev
-	r.nodes[bnext].prev = a
-	r.nodes[a].next = bnext
+	if aprev == b {
+		r.InsertAfter(a, bprev)
+		r.InsertAfter(b, a)
+	} else if bprev == a {
+		r.InsertAfter(b, aprev)
+		r.InsertAfter(a, b)
+	} else {
+		r.InsertAfter(a, bprev)
+		r.InsertAfter(b, aprev)
+	}
 
 	return nil
 }
