@@ -209,14 +209,14 @@ func (r *Ring) Swap(a, b int) error {
 func (r *Ring) Reverse() {
 }
 
-// Tours the ring and returns the node order as an array.
+// Tours the ring and returns the node order as an array starting from the "head" node.
 func (r *Ring) Tour() []int {
 	tour := make([]int, 0, len(r.nodes))
 
-	n := 0
+	n := r.head
 	tour = append(tour, n)
 	n = r.nodes[n].next
-	for n != 0 && n != -1 {
+	for n != r.head && n != -1 {
 		tour = append(tour, n)
 		n = r.nodes[n].next
 	}

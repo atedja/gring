@@ -50,31 +50,45 @@ func TestSetValue(t *testing.T) {
 
 func TestInsertAfter(t *testing.T) {
 	r := NewFromTour([]int{2, 1, 0, 4, 3})
+	assert.Equal(t, []int{0, 4, 3, 2, 1}, r.Tour())
+
 	r.InsertAfter(0, 3)
-	assert.Equal(t, []int{0, 2, 1, 4, 3}, r.Tour())
+	assert.Equal(t, []int{4, 3, 0, 2, 1}, r.Tour())
+
 	r.InsertAfter(4, 2)
-	assert.Equal(t, []int{0, 2, 4, 1, 3}, r.Tour())
+	assert.Equal(t, []int{3, 0, 2, 4, 1}, r.Tour())
+
 	r.InsertAfter(4, 2)
-	assert.Equal(t, []int{0, 2, 4, 1, 3}, r.Tour())
+	assert.Equal(t, []int{3, 0, 2, 4, 1}, r.Tour())
+
 	r.InsertAfter(2, 4)
-	assert.Equal(t, []int{0, 4, 2, 1, 3}, r.Tour())
+	assert.Equal(t, []int{3, 0, 4, 2, 1}, r.Tour())
+
 	r.InsertAfter(0, 2)
-	assert.Equal(t, []int{0, 1, 3, 4, 2}, r.Tour())
+	assert.Equal(t, []int{3, 4, 2, 0, 1}, r.Tour())
+
 	assert.Equal(t, 5, r.Len())
 }
 
 func TestInsertBefore(t *testing.T) {
 	r := NewFromTour([]int{2, 1, 0, 4, 3})
+	assert.Equal(t, []int{0, 4, 3, 2, 1}, r.Tour())
+
 	r.InsertBefore(0, 3)
-	assert.Equal(t, []int{0, 3, 2, 1, 4}, r.Tour())
+	assert.Equal(t, []int{4, 0, 3, 2, 1}, r.Tour())
+
 	r.InsertBefore(4, 2)
 	assert.Equal(t, []int{0, 3, 4, 2, 1}, r.Tour())
+
 	r.InsertBefore(4, 2)
 	assert.Equal(t, []int{0, 3, 4, 2, 1}, r.Tour())
+
 	r.InsertBefore(2, 4)
 	assert.Equal(t, []int{0, 3, 2, 4, 1}, r.Tour())
+
 	r.InsertBefore(0, 2)
-	assert.Equal(t, []int{0, 2, 4, 1, 3}, r.Tour())
+	assert.Equal(t, []int{3, 0, 2, 4, 1}, r.Tour())
+
 	assert.Equal(t, 5, r.Len())
 }
 
@@ -85,15 +99,24 @@ func TestDetach(t *testing.T) {
 	r.Detach(2)
 	assert.Equal(t, []int{0, 4, 1}, r.Tour())
 	assert.Equal(t, 3, r.Len())
+
+	r.Detach(0)
+	assert.Equal(t, []int{4, 1}, r.Tour())
+	assert.Equal(t, 2, r.Len())
 }
 
 func TestSwap(t *testing.T) {
 	r := NewFromTour([]int{2, 1, 0, 4, 3})
+	assert.Equal(t, []int{0, 4, 3, 2, 1}, r.Tour())
+
 	r.Swap(1, 3)
 	assert.Equal(t, []int{0, 4, 1, 2, 3}, r.Tour())
+
 	r.Swap(0, 4)
-	assert.Equal(t, []int{0, 1, 2, 3, 4}, r.Tour())
+	assert.Equal(t, []int{1, 2, 3, 4, 0}, r.Tour())
+
 	r.Swap(0, 4)
-	assert.Equal(t, []int{0, 4, 1, 2, 3}, r.Tour())
+	assert.Equal(t, []int{1, 2, 3, 0, 4}, r.Tour())
+
 	assert.Equal(t, 5, r.Len())
 }
