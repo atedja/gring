@@ -212,7 +212,7 @@ func (r *Ring) Reverse() error {
 
 	// stupid golang has no do-while. have to hack it in with the first bool
 	first := true
-	for first || (current != r.head && prev != -1) {
+	for first || (current != r.head && current != -1) {
 		first = false
 		r.nodes[current].prev = r.nodes[current].next
 		r.nodes[current].next = prev
