@@ -32,9 +32,10 @@ func New() *Ring {
 	return r
 }
 
-// Creates a new ring from an existing tour.
+// Creates a new ring from a tour.
 // A tour is an array of integers that specifies the order of the nodes, e.g. [2, 1, 0, 4, 3].
-// It is assumed that the array contains integers from [0,n) where n is the length of the array.
+// It is assumed that the array contains integers from [0,n) where n is the length of the array,
+// and each integer occurs only once.
 func NewFromArray(tour []int) *Ring {
 	r := New()
 	if len(tour) > 0 {
@@ -114,7 +115,7 @@ func (r *Ring) InsertAfter(n, p int) error {
 		pnext = r.nodes[pnext].next
 	}
 
-	if r.anyIsNil(n, p, pnext) {
+	if r.anyIsInvalid(n, p, pnext) {
 		return ErrInvalidOperationOnDetachedNode
 	}
 
@@ -142,7 +143,7 @@ func (r *Ring) InsertBefore(n, p int) error {
 		pprev = r.nodes[pprev].prev
 	}
 
-	if r.anyIsNil(n, p, pprev) {
+	if r.anyIsInvalid(n, p, pprev) {
 		return ErrInvalidOperationOnDetachedNode
 	}
 
@@ -163,7 +164,7 @@ func (r *Ring) InsertBefore(n, p int) error {
 func (r *Ring) Detach(n int) {
 	prev := r.nodes[n].prev
 	next := r.nodes[n].next
-	if r.anyIsNil(prev, next) {
+	if r.anyIsInvalid(prev, next) {
 		// already detached
 		return
 	}
@@ -185,7 +186,7 @@ func (r *Ring) Swap(a, b int) error {
 	aprev := r.nodes[a].prev
 	bprev := r.nodes[b].prev
 
-	if r.anyIsNil(a, b, aprev, bprev) {
+	if r.anyIsInvalid(a, b, aprev, bprev) {
 		return ErrInvalidOperationOnDetachedNode
 	}
 
@@ -280,7 +281,7 @@ func (r *Ring) Len() int {
 }
 
 // Checks if any values is -1
-func (r *Ring) anyIsNil(values ...int) bool {
+func (r *Ring) anyIsInvalid(values ...int) bool {
 	for _, v := range values {
 		if v == -1 {
 			return true
