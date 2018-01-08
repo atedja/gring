@@ -97,6 +97,11 @@ func (r *Ring) SetValue(n int, v interface{}) {
 	r.nodes[n].value = v
 }
 
+// Returns the value of a particular node
+func (r *Ring) Value(n int) interface{} {
+	return r.nodes[n].value
+}
+
 // Detaches node n, and inserts it after the node p, such that the end result becomes p -> n.
 // Returns error if ring is empty or p is a detached node.
 func (r *Ring) InsertAfter(n, p int) error {
