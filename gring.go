@@ -97,7 +97,7 @@ func (r *Ring) SetValue(n int, v interface{}) {
 	r.nodes[n].value = v
 }
 
-// Detaches node n, and inserts it after the node p, such that the end result becomes p -> n
+// Detaches node n, and inserts it after the node p, such that the end result becomes p -> n.
 // Returns error if ring is empty or p is a detached node.
 func (r *Ring) InsertAfter(n, p int) error {
 	if len(r.nodes) == 0 {
@@ -125,7 +125,7 @@ func (r *Ring) InsertAfter(n, p int) error {
 	return nil
 }
 
-// Detaches node n, and inserts it before the node p, such that the end result becomes n -> p
+// Detaches node n, and inserts it before the node p, such that the end result becomes n -> p.
 // Returns error if ring is empty or p is a detached node.
 func (r *Ring) InsertBefore(n, p int) error {
 	if len(r.nodes) == 0 {
