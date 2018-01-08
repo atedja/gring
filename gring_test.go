@@ -109,13 +109,17 @@ func TestSwap(t *testing.T) {
 	r := NewFromArray([]int{2, 1, 0, 4, 3})
 	assert.Equal(t, []int{0, 4, 3, 2, 1}, r.tour())
 
-	r.Swap(1, 3)
+	var err error
+	err = r.Swap(1, 3)
+	assert.Nil(t, err)
 	assert.Equal(t, []int{0, 4, 1, 2, 3}, r.tour())
 
-	r.Swap(0, 4)
+	err = r.Swap(0, 4)
+	assert.Nil(t, err)
 	assert.Equal(t, []int{1, 2, 3, 4, 0}, r.tour())
 
-	r.Swap(0, 4)
+	err = r.Swap(0, 4)
+	assert.Nil(t, err)
 	assert.Equal(t, []int{1, 2, 3, 0, 4}, r.tour())
 
 	assert.Equal(t, 5, r.Len())

@@ -187,18 +187,19 @@ func (r *Ring) Swap(a, b int) error {
 	r.Detach(a)
 	r.Detach(b)
 
+	var err error
 	if aprev == b {
-		r.InsertAfter(a, bprev)
-		r.InsertAfter(b, a)
+		err = r.InsertAfter(a, bprev)
+		err = r.InsertAfter(b, a)
 	} else if bprev == a {
-		r.InsertAfter(b, aprev)
-		r.InsertAfter(a, b)
+		err = r.InsertAfter(b, aprev)
+		err = r.InsertAfter(a, b)
 	} else {
-		r.InsertAfter(a, bprev)
-		r.InsertAfter(b, aprev)
+		err = r.InsertAfter(a, bprev)
+		err = r.InsertAfter(b, aprev)
 	}
 
-	return nil
+	return err
 }
 
 // Reverses the ring direction.
@@ -241,6 +242,7 @@ func (r *Ring) tour() []int {
 
 // Returns an iterator for this ring.
 // Iterator usually starts from the 0th node, although not guaranteed.
+// Returns an error if Ring is empty.
 func (r *Ring) Iterator() (*Iterator, error) {
 	return r.iteratorFrom(r.head)
 }
