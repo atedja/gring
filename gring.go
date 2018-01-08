@@ -274,12 +274,12 @@ func (r *Ring) Clone() *Ring {
 	return clone
 }
 
-// Get the size of the ring
+// Gets the size of the ring
 func (r *Ring) Len() int {
 	return r.length
 }
 
-// Check if any values is -1
+// Checks if any values is -1
 func (r *Ring) anyIsNil(values ...int) bool {
 	for _, v := range values {
 		if v == -1 {

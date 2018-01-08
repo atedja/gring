@@ -177,6 +177,18 @@ func TestIterator(t *testing.T) {
 
 	assert.Equal(t, []int{0, 4, 3, 2, 1}, order)
 	assert.Equal(t, []string{"Hi", "This", "is", "Circular", "List"}, values)
+
+	r.Reverse()
+	order = make([]int, 0)
+	values = make([]string, 0)
+	iter, err = r.Iterator()
+	for iter.Next() {
+		order = append(order, iter.Index())
+		values = append(values, iter.Value().(string))
+	}
+
+	assert.Equal(t, []int{0, 1, 2, 3, 4}, order)
+	assert.Equal(t, []string{"Hi", "List", "Circular", "is", "This"}, values)
 }
 
 func TestIteratorSingleElement(t *testing.T) {
