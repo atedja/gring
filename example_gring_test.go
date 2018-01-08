@@ -18,4 +18,6 @@ func ExampleRing() {
 	}
 
 	fmt.Println(values)
+	// Output:
+	// [1 10 100]
 }
