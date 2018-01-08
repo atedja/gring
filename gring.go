@@ -11,7 +11,7 @@ type node struct {
 }
 
 func (n node) String() string {
-	return fmt.Sprintf("[%d %d %v]", n.prev, n.next, n.value)
+	return fmt.Sprintf("[prev: %d, next: %d, %v]", n.prev, n.next, n.value)
 }
 
 // Ring is a circular doubly linked list using array as its underlying storage.
@@ -33,8 +33,8 @@ func New() *Ring {
 
 // Creates a new ring from an existing tour.
 // A tour is an array of integers that specifies the order of the nodes, e.g. [2, 1, 0, 4, 3].
-// It is assumed that tour contains integers from [0,n) where n is the length of the tour.
-func NewFromTour(tour []int) *Ring {
+// It is assumed that the array contains integers from [0,n) where n is the length of the array.
+func NewFromArray(tour []int) *Ring {
 	r := New()
 	if len(tour) > 0 {
 		for range tour {
@@ -63,7 +63,7 @@ func NewFromTour(tour []int) *Ring {
 }
 
 // Adds a new node to the "end" of the ring.
-// "End" of the ring is whichever node that comes before the 0th, or the head node.
+// "End" of the ring is whichever node that comes before the 0th or the head node.
 // If ring is empty, adds the first node.
 func (r *Ring) Add() {
 	r.AddWithValue(nil)
@@ -102,7 +102,7 @@ func (r *Ring) SetValue(n int, v interface{}) {
 }
 
 // Detaches node n, and inserts it after the node p, such that the end result becomes p -> n
-// Returns error if ring is empty or p is detached.
+// Returns error if ring is empty or p is a detached node.
 func (r *Ring) InsertAfter(n, p int) error {
 	if len(r.nodes) == 0 {
 		return ErrEmptyRing
@@ -130,7 +130,7 @@ func (r *Ring) InsertAfter(n, p int) error {
 }
 
 // Detaches node n, and inserts it before the node p, such that the end result becomes n -> p
-// Returns error if ring is empty or p is detached.
+// Returns error if ring is empty or p is a detached node.
 func (r *Ring) InsertBefore(n, p int) error {
 	if len(r.nodes) == 0 {
 		return ErrEmptyRing
@@ -206,11 +206,30 @@ func (r *Ring) Swap(a, b int) error {
 }
 
 // Reverses the ring direction.
-func (r *Ring) Reverse() {
+func (r *Ring) Reverse() error {
+	if len(r.nodes) == 0 {
+		return ErrEmptyRing
+	}
+
+	current := r.head
+	prev := r.nodes[current].prev
+
+	// stupid golang has no do-while. have to hack it in with the first bool
+	first := true
+	for first || (current != r.head && prev != -1) {
+		first = false
+		r.nodes[current].prev = r.nodes[current].next
+		r.nodes[current].next = prev
+
+		current = prev
+		prev = r.nodes[current].prev
+	}
+
+	return nil
 }
 
 // Tours the ring and returns the node order as an array starting from the "head" node.
-func (r *Ring) Tour() []int {
+func (r *Ring) tour() []int {
 	tour := make([]int, 0, len(r.nodes))
 
 	n := r.head
