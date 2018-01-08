@@ -178,3 +178,29 @@ func TestIterator(t *testing.T) {
 	assert.Equal(t, []int{0, 4, 3, 2, 1}, order)
 	assert.Equal(t, []string{"Hi", "This", "is", "Circular", "List"}, values)
 }
+
+func TestIteratorSingleElement(t *testing.T) {
+	r := NewFromArray([]int{0})
+	assert.Equal(t, []int{0}, r.tour())
+
+	r.SetValue(0, "Hi")
+
+	order := make([]int, 0)
+	values := make([]string, 0)
+	iter, err := r.Iterator()
+	assert.Nil(t, err)
+	for iter.Next() {
+		order = append(order, iter.Index())
+		values = append(values, iter.Value().(string))
+	}
+
+	assert.Equal(t, []int{0}, order)
+	assert.Equal(t, []string{"Hi"}, values)
+}
+
+func TestIteratorEmptyRing(t *testing.T) {
+	r := New()
+	iter, err := r.Iterator()
+	assert.Nil(t, iter)
+	assert.Equal(t, err, ErrEmptyRing)
+}
