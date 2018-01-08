@@ -136,3 +136,23 @@ func TestReverse(t *testing.T) {
 
 	assert.Equal(t, 5, r.Len())
 }
+
+func TestClone(t *testing.T) {
+	var err error
+	r := NewFromArray([]int{2, 1, 0, 4, 3})
+	assert.Equal(t, []int{0, 4, 3, 2, 1}, r.tour())
+
+	clone := r.Clone()
+	assert.Equal(t, []int{0, 4, 3, 2, 1}, clone.tour())
+
+	r.Reverse()
+	assert.Equal(t, []int{0, 1, 2, 3, 4}, r.tour())
+	assert.Equal(t, []int{0, 4, 3, 2, 1}, clone.tour())
+
+	clone.Swap(4, 2)
+	assert.Equal(t, []int{0, 1, 2, 3, 4}, r.tour())
+	assert.Equal(t, []int{0, 2, 3, 4, 1}, clone.tour())
+
+	assert.Equal(t, 5, r.Len())
+	assert.Equal(t, 5, clone.Len())
+}

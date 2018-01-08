@@ -255,7 +255,13 @@ func (r *Ring) IteratorFrom(n int) *Iterator {
 
 // Duplicates the ring.
 func (r *Ring) Clone() *Ring {
-	return nil
+	clone := &Ring{
+		nodes:  make([]*node, len(r.nodes)),
+		length: r.length,
+		head:   r.head,
+	}
+	copy(clone.nodes, r.nodes)
+	return clone
 }
 
 // Get the size of the ring
