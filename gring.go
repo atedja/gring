@@ -15,6 +15,7 @@ func (n node) String() string {
 }
 
 // Ring is a circular doubly linked list using array as its underlying storage.
+// Nodes in the ring can be detached, reinserted, or swapped.
 type Ring struct {
 	nodes  []*node
 	length int
@@ -243,14 +244,19 @@ func (r *Ring) tour() []int {
 	return tour
 }
 
-// Returns an iterator for this ring, starting from the "head" node.
-func (r *Ring) Iterator() *Iterator {
-	return r.IteratorFrom(r.head)
+// Returns an iterator for this ring.
+// Iterator usually starts from the 0th node, although not guaranteed.
+func (r *Ring) Iterator() (*Iterator, error) {
+	return r.iteratorFrom(r.head)
 }
 
 // Returns an iterator for this ring, starting from the node n.
-func (r *Ring) IteratorFrom(n int) *Iterator {
-	return nil
+func (r *Ring) iteratorFrom(n int) (*Iterator, error) {
+	if len(r.nodes) == 0 {
+		return nil, ErrEmptyRing
+	}
+
+	return &Iterator{start: n, current: -1, r: r}, nil
 }
 
 // Duplicates the ring.

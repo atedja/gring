@@ -155,3 +155,26 @@ func TestClone(t *testing.T) {
 	assert.Equal(t, 5, r.Len())
 	assert.Equal(t, 5, clone.Len())
 }
+
+func TestIterator(t *testing.T) {
+	r := NewFromArray([]int{2, 1, 0, 4, 3})
+	assert.Equal(t, []int{0, 4, 3, 2, 1}, r.tour())
+
+	r.SetValue(0, "Hi")
+	r.SetValue(4, "This")
+	r.SetValue(3, "is")
+	r.SetValue(2, "Circular")
+	r.SetValue(1, "List")
+
+	order := make([]int, 0)
+	values := make([]string, 0)
+	iter, err := r.Iterator()
+	assert.Nil(t, err)
+	for iter.Next() {
+		order = append(order, iter.Index())
+		values = append(values, iter.Value().(string))
+	}
+
+	assert.Equal(t, []int{0, 4, 3, 2, 1}, order)
+	assert.Equal(t, []string{"Hi", "This", "is", "Circular", "List"}, values)
+}
