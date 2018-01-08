@@ -1,17 +1,11 @@
 package gring
 
-import (
-	"fmt"
-)
+import ()
 
 type node struct {
 	next  int
 	prev  int
 	value interface{}
-}
-
-func (n node) String() string {
-	return fmt.Sprintf("[prev: %d, next: %d, %v]", n.prev, n.next, n.value)
 }
 
 // Ring is a circular doubly linked list using array as its underlying storage.
