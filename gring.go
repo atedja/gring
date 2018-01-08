@@ -109,7 +109,7 @@ func (r *Ring) InsertAfter(n, p int) error {
 		pnext = r.nodes[pnext].next
 	}
 
-	if r.anyIsInvalid(n, p, pnext) {
+	if anyIsInvalid(n, p, pnext) {
 		return ErrInvalidOperationOnDetachedNode
 	}
 
@@ -137,7 +137,7 @@ func (r *Ring) InsertBefore(n, p int) error {
 		pprev = r.nodes[pprev].prev
 	}
 
-	if r.anyIsInvalid(n, p, pprev) {
+	if anyIsInvalid(n, p, pprev) {
 		return ErrInvalidOperationOnDetachedNode
 	}
 
@@ -158,7 +158,7 @@ func (r *Ring) InsertBefore(n, p int) error {
 func (r *Ring) Detach(n int) {
 	prev := r.nodes[n].prev
 	next := r.nodes[n].next
-	if r.anyIsInvalid(prev, next) {
+	if anyIsInvalid(prev, next) {
 		// already detached
 		return
 	}
@@ -180,7 +180,7 @@ func (r *Ring) Swap(a, b int) error {
 	aprev := r.nodes[a].prev
 	bprev := r.nodes[b].prev
 
-	if r.anyIsInvalid(a, b, aprev, bprev) {
+	if anyIsInvalid(a, b, aprev, bprev) {
 		return ErrInvalidOperationOnDetachedNode
 	}
 
@@ -275,7 +275,7 @@ func (r *Ring) Len() int {
 }
 
 // Checks if any values is -1
-func (r *Ring) anyIsInvalid(values ...int) bool {
+func anyIsInvalid(values ...int) bool {
 	for _, v := range values {
 		if v == -1 {
 			return true
