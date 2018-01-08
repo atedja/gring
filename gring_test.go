@@ -138,7 +138,6 @@ func TestReverse(t *testing.T) {
 }
 
 func TestClone(t *testing.T) {
-	var err error
 	r := NewFromArray([]int{2, 1, 0, 4, 3})
 	assert.Equal(t, []int{0, 4, 3, 2, 1}, r.tour())
 

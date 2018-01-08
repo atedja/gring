@@ -260,7 +260,11 @@ func (r *Ring) Clone() *Ring {
 		length: r.length,
 		head:   r.head,
 	}
-	copy(clone.nodes, r.nodes)
+
+	for i, n := range r.nodes {
+		clone.nodes[i] = &node{n.next, n.prev, n.value}
+	}
+
 	return clone
 }
 
