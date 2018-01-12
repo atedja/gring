@@ -207,6 +207,41 @@ func (r *Ring) Swap(a, b int) error {
 	return err
 }
 
+// Given a node and a target node, sets node's next to target, while still maintaining the loop.
+// This will reverse part of the tour.
+func (r *Ring) TwoOptSwap(n, target int) error {
+	oldNext := r.nodes[n].next
+	oldTargetNext := r.nodes[target].next
+
+	if anyIsInvalid(n, target, oldNext, oldTargetNext) {
+		return ErrInvalidOperationOnDetachedNode
+	}
+
+	// disconnect
+	r.nodes[oldNext].prev = -1
+	r.nodes[oldTargetNext].prev = -1
+
+	// connect with new one
+	r.nodes[n].next = target
+
+	// reverse the direction. this will loop until we hit oldNext
+	var old = n
+	var current = target
+	for current != -1 {
+		var oldPrev = r.nodes[current].prev
+		r.nodes[current].prev = old
+		r.nodes[current].next = oldPrev
+
+		old = current
+		current = oldPrev
+	}
+
+	r.nodes[oldNext].next = oldTargetNext
+	r.nodes[oldTargetNext].prev = oldNext
+
+	return nil
+}
+
 // Reverses the ring direction.
 func (r *Ring) Reverse() error {
 	if len(r.nodes) == 0 {

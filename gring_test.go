@@ -125,6 +125,29 @@ func TestSwap(t *testing.T) {
 	assert.Equal(t, 5, r.Len())
 }
 
+func TestTwoOptSwap(t *testing.T) {
+	r := NewFromArray([]int{0, 1, 3, 4, 5, 6, 2})
+
+	var err error
+	err = r.TwoOptSwap(0, 2)
+	assert.Nil(t, err)
+	assert.Equal(t, []int{0, 2, 6, 5, 4, 3, 1}, r.tour())
+
+	err = r.TwoOptSwap(2, 1)
+	assert.Nil(t, err)
+	assert.Equal(t, []int{0, 2, 1, 3, 4, 5, 6}, r.tour())
+
+	err = r.TwoOptSwap(3, 6)
+	assert.Nil(t, err)
+	assert.Equal(t, []int{0, 2, 1, 3, 6, 5, 4}, r.tour())
+
+	err = r.TwoOptSwap(2, 3)
+	assert.Nil(t, err)
+	assert.Equal(t, []int{0, 2, 3, 1, 6, 5, 4}, r.tour())
+
+	assert.Equal(t, 7, r.Len())
+}
+
 func TestReverse(t *testing.T) {
 	var err error
 	r := NewFromArray([]int{2, 1, 0, 4, 3})
